@@ -1,65 +1,102 @@
-import React,{useEffect,useState,useContext} from 'react';
-import {CartContext} from '../CartContext';
-
+import React, { useContext } from "react";
+import { CartContext } from "../CartContext";
 
 const Cart = () => {
 
-  const[products,setProducts] =useState([]);
-  const { cart,setCart } = useContext(CartContext);
   
+  
+  let total =0 
+  const { cart, setCart } = useContext(CartContext);
+  const _cart = {...cart}
+
+  const increment = (productId) =>{
+    const item = cart.items.find(x => x.id === productId)
+    item.quantity += 1
+    _cart.totalItems += 1;
+    setCart(_cart);
+  }
 
 
-  useEffect(()=>{
-    if(!cart.items){
-      return
+  const decrement = (productId) =>{
+    const item = cart.items.find(x => x.id === productId);
+    if(item.quantity === 1){
+      return;
     }
-  },[cart]);
-  
-  return (
-
-    !products ? <p className='text-center text-6xl py-80'>Cart is Empty</p>
-
-    :
+    item.quantity -= 1
+    _cart.totalItems -= 1;
+    setCart(_cart);
+  }
 
 
-    <div className='container mx-auto lg:w-1/2 w-full pb-24'>
-      <h1 className='my-12 font-bold'>Cart Items</h1>
-      <ul>
-        {
-          products.map(product =>{
-            return(
-              <li className='mb-12' key = {product.id}>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center'>
-                    <img className='h-16' src={product.image}alt/>
-                    <span className='font-bold ml-4 w-48'>{product.name}</span>
-                  </div>
-                  <div>
-                    <button className='bg-yellow-500 px-4 py-2 rounded-full leading-none' >-</button>
-                    <b className='px-4'>1</b>
-                    <button className='bg-yellow-500 px-4 py-2 rounded-full leading-none'>+</button>
+  const getSum = (quantity,price)=>{
+    const sum = price * quantity;
+    total += sum;
+    return sum;
+  }
 
-                  </div>
-                  <span>₹ {product.price} </span>
-                  <button className='bg-red-500 px-4 py-2 rounded-full leading-none text-white'  >Delete</button>
-                </div>
-            </li>
-            )
-          })
-        }
+  const handleDelete = (productId) =>{
+    const itemIndex = cart.items.findIndex(x => x.id === productId);
+    if (itemIndex !== -1) {
+      const deletedItem = _cart.items.splice(itemIndex, 1)[0];
+      _cart.totalItems -= deletedItem.quantity;
+      setCart(_cart);
+    }
 
-      </ul> 
-      <hr className='my-6'/>
-      <div className='text-right'>
-        <b>Grand Total:</b>₹
-      </div>
-      <div className='text-right mt-6'>
-        <button className='bg-yellow-500 px-4 py-2 rounded-full leading-none' >Order Now</button>
-      </div>
-
-    </div>
+    if(cart.items.length === 0){
+      setCart({})
+    }
     
-  )
-}
+  }
 
-export default Cart
+  const handleOrderNow = () =>{
+    window.alert('Order Placed Succesfully!')
+    setCart({});
+  }
+  
+
+  return !cart.items ? (
+    <p className="text-center text-6xl py-80">Cart is Empty</p>
+  ) : (
+    <div className="container mx-auto lg:w-1/2 w-full pb-24">
+      <h1 className="my-12 font-bold">Cart Items</h1>
+      <ul>
+        {cart.items.map((product) => {
+          return (
+            <li className="mb-12" key={product.id}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <img className="h-16 w-16" src={product.thumbnail} alt="" />
+                  <span className="font-bold ml-4 w-48">{product.title}</span>
+                </div>
+                <div>
+                  <button className="bg-yellow-500 px-4 py-2 rounded-full leading-none" onClick={()=>{decrement(product.id)}}>
+                    -
+                  </button>
+                  <b className="px-4">{product.quantity}</b>
+                  <button className="bg-yellow-500 px-4 py-2 rounded-full leading-none" onClick={()=>{increment(product.id)}}>
+                    +
+                  </button>
+                </div>
+                <span>₹ {getSum(product.quantity,product.price)} </span>
+                <button className="bg-red-500 px-4 py-2 rounded-full leading-none text-white" onClick={()=>{handleDelete(product.id)}}>
+                  Delete
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      <hr className="my-6" />
+      <div className="text-right">
+        <b>Grand Total:</b>₹ {total}
+      </div>
+      <div className="text-right mt-6">
+        <button className="bg-yellow-500 px-4 py-2 rounded-full leading-none" onClick={handleOrderNow}>
+          Order Now
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default Cart;

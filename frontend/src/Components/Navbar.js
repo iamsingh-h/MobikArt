@@ -17,7 +17,7 @@ const Navbar = () =>{
                             <Link to="/cart">
                                 <div className="bg-red-600 py-1 px-3 rounded-2xl flex">
                                     Cart 
-                                    <span className="ml-2">{cart.totalItems ? cart.totalItems:0}</span>
+                                    <span className="ml-2">{cart.totalItems ? cart.totalItems : null}</span>
                                     
                                 </div>
                             </Link>

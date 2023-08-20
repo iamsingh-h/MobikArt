@@ -1,4 +1,4 @@
-import { resolvePath } from "react-router";
+
 
 export const getCart = () =>{
     return new Promise((resolve,reject)=>{
@@ -10,8 +10,9 @@ export const getCart = () =>{
 }
 
 
-export const storeCart = (cart) =>{
-    window.localStorage.setItem('cart',JSON.stringify(cart));
+
+export const storeCart = (cart) =>{    
+    window.localStorage.setItem('cart',cart);
 
 }
 

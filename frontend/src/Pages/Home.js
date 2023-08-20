@@ -1,16 +1,14 @@
-import React from 'react'
-import Slider from '../Components/Slider'
-import Products from '../Components/Products'
+import React from "react";
+import Slider from "../Components/Slider";
+import Products from "../Components/Products";
 
 function Home() {
   return (
     <>
-    <Slider/>
-    <Products/>
-
+      <Slider />
+      <Products />
     </>
-    
-  )
+  );
 }
 
-export default Home
+export default Home;

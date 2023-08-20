@@ -20,7 +20,7 @@ async function main() {
 
 //middlewares
 server.use(express.json());
-server.use(morgan('default'));
+//server.use(morgan('default'));
 server.use('/api',productRouter.router)
 
 
